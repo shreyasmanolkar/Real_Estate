@@ -1,55 +1,53 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import Image from 'next/image'
 import { Flex, Box, Text, Icon } from '@chakra-ui/react';
 import { BsFilter } from 'react-icons/bs';
 
+import Property from '../components/Property';
 import SearchFilters from '../components/SerachFilters';
-import Property from '../components/property';
-import noresult from '../assets/images/noresult.svg';
-import { fetchApi, baseUrl } from '../utils/fetchApi';
+import { baseUrl, fetchApi } from '../utils/fetchApi';
+import noresult from '../assets/images/noresult.svg'
 
 const Search = ({ properties }) => {
-    const [searchFilters, setSearchFilters ] = useState(false); 
-    const router = useRouter();
+  const [searchFilters, setSearchFilters] = useState(false);
+  const router = useRouter();
 
-    return(
-        <Box>
-            <Flex
-                cursor="pointer"
-                backgroundColor="gray.100"
-                borderBottom="1px"
-                borderColor="gray.200"
-                p="2"
-                fontWeight="black"
-                fontSize="lg"
-                justifyContent="center"
-                alignItems="center"
-                onClick={()=>setSearchFilters((prevFilter) => !prevFilter)}
-            >
-                <Text>Search Property By Filters</Text>
-                <Icon paddingLeft="2" w="7" as={ BsFilter }/>
-            </Flex>
-            { searchFilters && <SearchFilters/> }
-            <Text fontSize="2xl" p="4" fontWeight="bold">
-                Properties { router.query.purpose }
-            </Text>
-            <Flex flexWrap="wrap">
-                { properties?.map((property) => <Property property={property} key={property.id}/>)}
-            </Flex>
-            { properties?.length === 0 && (
-                <Flex justifyContent="center" alignItems="center" flexDirection="column" marginTop="5" marginBottom="5" >
-                    <Image alt='no result' src={noresult}/>
-                    <Text fontSize="2xl" marginTop="3">No Result Found !</Text>
-                </Flex>
-            ) }
-        </Box>
-    )
+  return (
+    <Box>
+      <Flex
+        onClick={() => setSearchFilters(!searchFilters)}
+        cursor='pointer'
+        bg='gray.100'
+        borderBottom='1px'
+        borderColor='gray.200'
+        p='2'
+        fontWeight='black'
+        fontSize='lg'
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Text>Search Property By Filters</Text>
+        <Icon paddingLeft='2' w='7' as={BsFilter} />
+      </Flex>
+      {searchFilters && <SearchFilters />}
+      <Text fontSize='2xl' p='4' fontWeight='bold'>
+        Properties {router.query.purpose}
+      </Text>
+      <Flex flexWrap='wrap'>
+        {properties.map((property) => <Property property={property} key={property.id} />)}
+      </Flex>
+      {properties.length === 0 && (
+        <Flex justifyContent='center' alignItems='center' flexDir='column' marginTop='5' marginBottom='5'>
+          <Image src={noresult} />
+          <Text fontSize='xl' marginTop='3'>No Result Found.</Text>
+        </Flex>
+      )}
+    </Box>
+  );
 };
 
-export default Search;
-
-export async function getServerSideProps({ query }){
+export async function getServerSideProps({ query }) {
   const purpose = query.purpose || 'for-rent';
   const rentFrequency = query.rentFrequency || 'yearly';
   const minPrice = query.minPrice || '0';
@@ -69,3 +67,5 @@ export async function getServerSideProps({ query }){
     },
   };
 }
+
+export default Search;
