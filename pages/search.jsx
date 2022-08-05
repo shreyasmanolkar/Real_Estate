@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image'
+import Image from 'next/image';
 import { Flex, Box, Text, Icon } from '@chakra-ui/react';
 import { BsFilter } from 'react-icons/bs';
 
@@ -38,7 +38,7 @@ const Search = ({ properties }) => {
         {properties.map((property) => <Property property={property} key={property.id} />)}
       </Flex>
       {properties.length === 0 && (
-        <Flex justifyContent='center' alignItems='center' flexDir='column' marginTop='5' marginBottom='5'>
+        <Flex justifyContent='center' alignItems='center' flexDirection='column' marginTop='5' marginBottom='5'>
           <Image src={noresult} alt="image"/>
           <Text fontSize='xl' marginTop='3'>No Result Found.</Text>
         </Flex>
@@ -46,6 +46,8 @@ const Search = ({ properties }) => {
     </Box>
   );
 };
+
+export default Search;
 
 export async function getServerSideProps({ query }) {
   const purpose = query.purpose || 'for-rent';
@@ -56,10 +58,11 @@ export async function getServerSideProps({ query }) {
   const bathsMin = query.bathsMin || '0';
   const sort = query.sort || 'price-desc';
   const areaMax = query.areaMax || '35000';
+  const furnishingStatus = query.furnishingStatus || 'furnished'
   const locationExternalIDs = query.locationExternalIDs || '5002';
   const categoryExternalID = query.categoryExternalID || '4';
 
-  const data = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=${locationExternalIDs}&purpose=${purpose}&categoryExternalID=${categoryExternalID}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&priceMin=${minPrice}&priceMax=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}`);
+  const data = await fetchApi(`${baseUrl}/properties/list?locationExternalIDs=${locationExternalIDs}&purpose=${purpose}&categoryExternalID=${categoryExternalID}&bathsMin=${bathsMin}&rentFrequency=${rentFrequency}&priceMin=${minPrice}&priceMax=${maxPrice}&roomsMin=${roomsMin}&sort=${sort}&areaMax=${areaMax}&furnishingStatus=${furnishingStatus}`);
 
   return {
     props: {
@@ -67,5 +70,3 @@ export async function getServerSideProps({ query }) {
     },
   };
 }
-
-export default Search;
